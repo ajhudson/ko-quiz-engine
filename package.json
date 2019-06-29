@@ -1,0 +1,16 @@
+{
+  "name": "quiz-machine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andy Hudson",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "jquery": "^1.12.4",
+    "knockout": "^3.5.0"
+  }
+}
