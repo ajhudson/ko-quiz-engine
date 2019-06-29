@@ -1,0 +1,38 @@
+{
+    "title": "Super Mario Quiz",
+    "questions": [
+        {
+            "id": 1,
+            "questiontext": "Who created the character of Mario?",
+            "choices": [
+                { "choice": "A", "choicetext": "Bill Gates" },
+                { "choice": "B", "choicetext": "Shigeru Miyamoto" },
+                { "choice": "C", "choicetext": "Satoshi Nakamoto" },
+                { "choice": "D", "choicetext": "Sonic the Hedgehog" }
+            ],
+            "answer": { "index": 2 }
+        },
+        {
+            "id": 2,
+            "questiontext": "What year was Mario created?",
+            "choices": [
+                { "choice": "A", "choicetext": "1965" },
+                { "choice": "B", "choicetext": "1981" },
+                { "choice": "C", "choicetext": "1984" },
+                { "choice": "D", "choicetext": "1983" }
+            ],
+            "answer": { "index": 2 }
+        },
+        {
+            "id": 3,
+            "questiontext": "What was Mario's original name?",
+            "choices": [
+                { "choice": "A", "choicetext": "Plumber Man" },
+                { "choice": "B", "choicetext": "Moustache Man" },
+                { "choice": "C", "choicetext": "Dump Man" },
+                { "choice": "D", "choicetext": "Jump Man" }
+            ],
+            "answer": { "index": 3 }
+        }
+    ]
+}
