@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
         .container > .jumbotron:first-child { margin-top: 10px; }
+        .question-number { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -28,9 +29,21 @@
             <h2 data-bind="text: quizTitle"></h2>
         </div>
 
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span class="question-number" data-bind="text: currentQuestionNumber()"></span>.&nbsp;
+                <span data-bind="text: currentTitle()"></span>
+            </div>
+            <div class="panel-body">
+                <p data-bind="text: questions().length"></p>
+                
+                <p data-bind="text: questions()[0].choices[0].choiceText"></p>
+                
+            </div>
+        </div>
     </div>
 
-
+    <pre data-bind="text: ko.toJSON($data)"></pre>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -43,9 +56,22 @@
             
             var self = this;
             self.quizTitle = ko.observable("");
+            self.questions = ko.observableArray([]);
+            self.idx = ko.observable(0);
+
+            self.currentTitle = function() {
+                return self.questions()[self.idx()].questionText;
+            };
+
+            self.currentQuestionNumber = function() {
+                return self.idx() + 1;
+            };
 
             return {
-                quizTitle: self.quizTitle
+                quizTitle: self.quizTitle,
+                questions: self.questions,
+                currentTitle: currentTitle,
+                currentQuestionNumber: currentQuestionNumber
             }
         })();
 
@@ -53,6 +79,7 @@
         ajh.quizLoader.createQuiz("http://localhost/ko-quiz/data/mario-data.json", function(quiz) {
             console.log(quiz);
             viewModel.quizTitle(quiz.title);
+            viewModel.questions(quiz.questions);
             console.log(viewModel);
 
             ko.applyBindings(viewModel);
