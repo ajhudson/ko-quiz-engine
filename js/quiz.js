@@ -3,7 +3,8 @@ ajh.datasource = "data/mario-data.json";
 
 (function() {
 
-    ajh.Quiz = function(questions) {
+    var Quiz = function(title, questions) {
+        this.this = title;
         this.questions = questions;
     };
     
@@ -11,10 +12,10 @@ ajh.datasource = "data/mario-data.json";
         this.id = id;
         this.questionText = questionText;
         this.choices = choices;
-        this.answer;   
+        this.answer = answer;   
     }
 
-    var Choices = function(choice, choiceText) {
+    var Choice = function(choice, choiceText) {
         this.choice = choice;
         this.choiceText = choiceText;
     };
@@ -23,21 +24,33 @@ ajh.datasource = "data/mario-data.json";
         this.index = index;
     };
 
-    var loadData = function(datasource) {
-        console.log('load data from ' + datasource);
+    var loadData = function() {
+        $.getJSON("http://localhost/ko-quiz/data/mario-data.json", function (response) { 
 
-        
+            var quizQuestions = [];
 
+            for (q in response.questions) {
+                var currentQuestion = response.questions[q];
+                var answerToStore = new Answer(currentQuestion.answer);
+                var currentChoices = currentQuestion.choices;
+                var choicesToStore = [];
+
+                for (c in currentChoices) {
+                    var currentChoice = currentChoices[c];
+                    choicesToStore.push(new Choice(currentChoice.choice, currentChoice.choicetext));
+                }
+
+                quizQuestions.push(new Question(currentQuestion.questionid, currentQuestion.questiontext, choicesToStore, answerToStore));
+            }
+
+            var quiz = new Quiz(response.title, quizQuestions);
+
+            console.log(quiz);
+        });
     };
 
-    $.ajax({
-        dataType: "json",
-        url: "data/mario-data.json",
-        data: null,
-        success: function() {
-            alert('ok');
-        }
-    })
+    loadData();
 
+    
 })(ajh);
 

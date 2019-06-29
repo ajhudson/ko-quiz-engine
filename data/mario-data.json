@@ -2,7 +2,7 @@
     "title": "Super Mario Quiz",
     "questions": [
         {
-            "id": 1,
+            "questionid": 1,
             "questiontext": "Who created the character of Mario?",
             "choices": [
                 { "choice": "A", "choicetext": "Bill Gates" },
@@ -13,7 +13,7 @@
             "answer": { "index": 2 }
         },
         {
-            "id": 2,
+            "questionid": 2,
             "questiontext": "What year was Mario created?",
             "choices": [
                 { "choice": "A", "choicetext": "1965" },
@@ -24,7 +24,7 @@
             "answer": { "index": 2 }
         },
         {
-            "id": 3,
+            "questionid": 3,
             "questiontext": "What was Mario's original name?",
             "choices": [
                 { "choice": "A", "choicetext": "Plumber Man" },
