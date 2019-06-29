@@ -1,0 +1,28 @@
+<div id="my-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Contact</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form" data-bind="using: newContactFormViewModel.formFields">
+                        <div class="form-group" data-bind="css: { 'has-error': newContactFirstname.hasError() }">
+                            <label for="firstname">First name:</label>
+                            <input type="text" class="form-control" placeholder="First name" data-bind="value: newContactFirstname, valueUpdate: 'afterkeydown'">
+                            <span data-bind="visible: newContactFirstname.hasError(), text: newContactFirstname.validationMessage"> </span>
+                        </div>
+                        <div class="form-group" data-bind="css: { 'has-error': newContactSurname.hasError() }">
+                            <label for="surname">Surname:</label>
+                            <input type="text" class="form-control" placeholder="Surname" data-bind="value: newContactSurname, valueUpdate: 'afterkeydown'">
+                            <span data-bind="visible: newContactSurname.hasError(), text: newContactSurname.validationMessage"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-ok="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>

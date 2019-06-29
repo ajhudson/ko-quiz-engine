@@ -1,10 +1,8 @@
 var ajh = ajh || {}; // declare the namespace
-ajh.datasource = "data/mario-data.json";
 
-(function() {
-
+ajh.quizLoader = (function() {
     var Quiz = function(title, questions) {
-        this.this = title;
+        this.title = title;
         this.questions = questions;
     };
     
@@ -24,13 +22,12 @@ ajh.datasource = "data/mario-data.json";
         this.index = index;
     };
 
-    var loadData = function() {
-        $.getJSON("http://localhost/ko-quiz/data/mario-data.json", function (response) { 
+    var createQuiz = function(data) {
+        var quizQuestions = [];
+        var titleToStore = data.title;
 
-            var quizQuestions = [];
-
-            for (q in response.questions) {
-                var currentQuestion = response.questions[q];
+            for (q in data.questions) {
+                var currentQuestion = data.questions[q];
                 var answerToStore = new Answer(currentQuestion.answer);
                 var currentChoices = currentQuestion.choices;
                 var choicesToStore = [];
@@ -43,14 +40,21 @@ ajh.datasource = "data/mario-data.json";
                 quizQuestions.push(new Question(currentQuestion.questionid, currentQuestion.questiontext, choicesToStore, answerToStore));
             }
 
-            var quiz = new Quiz(response.title, quizQuestions);
+            var quiz = new Quiz(titleToStore, quizQuestions);
 
-            console.log(quiz);
-        });
+            return quiz;
     };
 
-    loadData();
+    var loadData = function(datasourceUrlUrl) {
+        return $.getJSON(datasourceUrlUrl, function (response) {});
+    };
 
-    
+    return {
+        createQuiz: function(url, callback) {
+            loadData(url).done(function(data) {
+                var quiz = createQuiz(data);
+                callback(quiz);
+            });
+        }
+    };
 })(ajh);
-
