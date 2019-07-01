@@ -35,12 +35,16 @@
                 <span data-bind="text: currentTitle()"></span>
             </div>
             <div class="panel-body">
-                <ul class="list-group" data-bind="foreach: questions()[idx()].choices">
-                    <li class="list-group-item" data-bind="text: choiceText"></li>
-                </ul>
+                <div id="multiple-choices-container" data-bind="if: loaded">
+                        <ul class="list-group" data-bind="foreach: questions()[idx()].choices">
+                            <li class="list-group-item" data-bind="text: choice + ', ' + choiceText, answerQuestion: choice"></li>
+                        </ul>
+                </div>
             </div>
         </div>
     </div>
+
+    <pre data-bind="text: ko.toJSON($data.answers)"></pre>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -54,30 +58,47 @@
             var self = this;
             self.quizTitle = ko.observable("");
             self.questions = ko.observableArray([]);
+            self.loaded = ko.observable(false);
             self.idx = ko.observable(0);
+            self.answers = ko.observableArray([]);
 
-            self.currentTitle = function() {
-                return self.questions()[self.idx()].questionText;
-            };
+            self.currentTitle = ko.computed(function () {
+                var currentQuestion = self.questions()[self.idx()];
+                var questionText = currentQuestion !== undefined ? currentQuestion.questionText : "";
 
-            self.currentQuestionNumber = function() {
+                return questionText;
+            });
+
+            self.currentQuestionNumber = ko.computed(function() {
                 return self.idx() + 1;
+            });
+
+            self.initialiseAnwers = function() {
+                self.answers(new Array(self.questions().length));
             };
+
+            self.recordAnswer = function(chosenChoice) {
+                self.answers()[self.idx()] = chosenChoice;
+            }
 
             return {
+                loaded: loaded,
+                initialiseAnwers: initialiseAnwers,
+                recordAnswer: recordAnswer,
                 quizTitle: self.quizTitle,
                 questions: self.questions,
                 currentTitle: currentTitle,
-                currentQuestionNumber: currentQuestionNumber
+                currentQuestionNumber: currentQuestionNumber,
+                answers: answers
             }
         })();
 
 
         ajh.quizLoader.createQuiz("http://localhost/ko-quiz/data/mario-data.json", function(quiz) {
-            console.log(quiz);
             viewModel.quizTitle(quiz.title);
             viewModel.questions(quiz.questions);
-            console.log(viewModel);
+            viewModel.loaded(true);
+            viewModel.initialiseAnwers()
 
             ko.applyBindings(viewModel);
         });

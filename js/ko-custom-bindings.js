@@ -36,3 +36,23 @@ ko.bindingHandlers.bootstrapModal = {
         });
     }
 };
+
+ko.bindingHandlers.answerQuestion = {
+    init: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
+        $(el).css("cursor", "pointer");
+
+        $(el).on("click", function() {
+
+            var chosenAnswer = valueAccessor();
+            bindingContext.$parent.recordAnswer(chosenAnswer);
+
+            console.log(bindingContext.$parent.answers());
+
+            $(this).parent().find("li.list-group-item").each(function (el) {
+                $(this).removeClass("active");
+            });
+
+            $(this).addClass("active");
+        });
+    },
+};
