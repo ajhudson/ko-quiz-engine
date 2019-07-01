@@ -35,15 +35,12 @@
                 <span data-bind="text: currentTitle()"></span>
             </div>
             <div class="panel-body">
-                <p data-bind="text: questions().length"></p>
-                
-                <p data-bind="text: questions()[0].choices[0].choiceText"></p>
-                
+                <ul class="list-group" data-bind="foreach: questions()[idx()].choices">
+                    <li class="list-group-item" data-bind="text: choiceText"></li>
+                </ul>
             </div>
         </div>
     </div>
-
-    <pre data-bind="text: ko.toJSON($data)"></pre>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
