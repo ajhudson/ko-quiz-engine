@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <pre data-bind="text: ko.toJSON($data.answers)"></pre>
+    <pre data-bind="text: currentAnswer"></pre>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -61,6 +61,7 @@
             self.loaded = ko.observable(false);
             self.idx = ko.observable(0);
             self.answers = ko.observableArray([]);
+            self.currentAnswer = ko.observable("");
 
             self.currentTitle = ko.computed(function () {
                 var currentQuestion = self.questions()[self.idx()];
@@ -74,11 +75,15 @@
             });
 
             self.initialiseAnwers = function() {
-                self.answers(new Array(self.questions().length));
+                /*
+                var arr = new Array(self.questions().length);
+                self.answers = ko.observableArray(arr);
+                */
             };
 
             self.recordAnswer = function(chosenChoice) {
-                self.answers()[self.idx()] = chosenChoice;
+                //self.answers()[self.idx()] = chosenChoice;
+                self.answers().push(chosenChoice);
             }
 
             return {
@@ -89,7 +94,8 @@
                 questions: self.questions,
                 currentTitle: currentTitle,
                 currentQuestionNumber: currentQuestionNumber,
-                answers: answers
+                answers: answers,
+                currentAnswer: currentAnswer
             }
         })();
 
