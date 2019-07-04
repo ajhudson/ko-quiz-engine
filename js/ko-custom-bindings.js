@@ -42,10 +42,7 @@ ko.bindingHandlers.answerQuestion = {
         $(el).css("cursor", "pointer");
 
         $(el).on("click", function() {
-
             var chosenAnswer = valueAccessor();
-            //bindingContext.$parent.recordAnswer(chosenAnswer);
-
             bindingContext.$parent.currentAnswer(chosenAnswer);
 
             $(this).parent().find("li.list-group-item").each(function (el) {
@@ -54,10 +51,5 @@ ko.bindingHandlers.answerQuestion = {
 
             $(this).addClass("active");
         });
-    },
-    update: function (el, valueAccessor) {
-        var chosenAnswer = valueAccessor();
-
-    
     }
 };

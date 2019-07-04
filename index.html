@@ -6,6 +6,7 @@
     <style>
         .container > .jumbotron:first-child { margin-top: 10px; }
         .question-number { font-weight: bold; }
+        .center { text-align: center; }
     </style>
 </head>
 <body>
@@ -42,9 +43,14 @@
                 </div>
             </div>
         </div>
+
+        <div class="row center">
+            <button type="button" class="btn btn-lg btn-primary" data-bind="enable: backButtonEnabledStatus, click: goToPreviousQuestion"><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</button>
+            <button type="button" class="btn btn-lg btn-primary" data-bind="enable: nextButtonEnabledStatus, click: goToNextQuestion">Next&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+        </div>
     </div>
 
-    <pre data-bind="text: currentAnswer"></pre>
+    <div data-bind="text: currentAnswer"></div>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -62,6 +68,8 @@
             self.idx = ko.observable(0);
             self.answers = ko.observableArray([]);
             self.currentAnswer = ko.observable("");
+            self.backButtonEnabled = ko.observable(false);
+            self.nextButtonEnabled = ko.observable(true);
 
             self.currentTitle = ko.computed(function () {
                 var currentQuestion = self.questions()[self.idx()];
@@ -74,37 +82,51 @@
                 return self.idx() + 1;
             });
 
-            self.initialiseAnwers = function() {
-                /*
-                var arr = new Array(self.questions().length);
-                self.answers = ko.observableArray(arr);
-                */
-            };
+            self.maxQuestions = ko.computed(function() {
+                return self.questions().length;
+            });
 
             self.recordAnswer = function(chosenChoice) {
-                //self.answers()[self.idx()] = chosenChoice;
                 self.answers().push(chosenChoice);
-            }
+            };
+
+            self.backButtonEnabledStatus = ko.computed(function() {
+                return self.currentQuestionNumber() > 1 ? true : false;
+            });
+
+            self.nextButtonEnabledStatus = ko.computed(function() {
+                return self.currentQuestionNumber() < self.maxQuestions() ? true : false; 
+            });
+
+            self.goToNextQuestion = function() {
+                var ind = self.idx() + 1;
+                self.idx(ind);
+            };
+
+            self.goToPreviousQuestion = function() {
+                var ind = self.idx() - 1;
+                self.idx(ind);
+            };
 
             return {
                 loaded: loaded,
-                initialiseAnwers: initialiseAnwers,
-                recordAnswer: recordAnswer,
                 quizTitle: self.quizTitle,
                 questions: self.questions,
                 currentTitle: currentTitle,
                 currentQuestionNumber: currentQuestionNumber,
                 answers: answers,
-                currentAnswer: currentAnswer
+                currentAnswer: currentAnswer,
+                backButtonEnabledStatus: backButtonEnabledStatus,
+                nextButtonEnabledStatus: nextButtonEnabledStatus,
+                goToPreviousQuestion: goToPreviousQuestion,
+                goToNextQuestion: goToNextQuestion
             }
         })();
-
 
         ajh.quizLoader.createQuiz("http://localhost/ko-quiz/data/mario-data.json", function(quiz) {
             viewModel.quizTitle(quiz.title);
             viewModel.questions(quiz.questions);
             viewModel.loaded(true);
-            viewModel.initialiseAnwers()
 
             ko.applyBindings(viewModel);
         });
