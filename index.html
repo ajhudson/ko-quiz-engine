@@ -38,7 +38,7 @@
             <div class="panel-body">
                 <div id="multiple-choices-container" data-bind="if: loaded">
                         <ul class="list-group" data-bind="foreach: questions()[idx()].choices">
-                            <li class="list-group-item" data-bind="text: choice + ', ' + choiceText, answerQuestion: choice"></li>
+                            <li class="list-group-item" data-bind="text: choice + '. ' + choiceText, answerQuestion: choice, css: hasAnsweredIndicator(choice)"></li>
                         </ul>
                 </div>
             </div>
@@ -47,89 +47,19 @@
         <div class="row center">
             <button type="button" class="btn btn-lg btn-primary" data-bind="enable: backButtonEnabledStatus, click: goToPreviousQuestion"><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</button>
             <button type="button" class="btn btn-lg btn-primary" data-bind="enable: nextButtonEnabledStatus, click: goToNextQuestion">Next&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+            <button type="button" class="btn btn-lg btn-success" data-bind="enable: finishButtonEnabledStatus, click: completeQuiz">Finish&nbsp;</button>
+        </div>
+        <div class="row">
+            <div id="currentAnswer" data-bind="text: currentAnswer"></div>
+            <div data-bind="text: hasAnswered"></div>
         </div>
     </div>
-
-    <div data-bind="text: currentAnswer"></div>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="node_modules/knockout/build/output/knockout-latest.debug.js"></script>
     <script src="js/ko-custom-bindings.js"></script>
     <script src="js/quiz-loader.js"></script>
-
-    <script>
-        var viewModel = (function() {
-            
-            var self = this;
-            self.quizTitle = ko.observable("");
-            self.questions = ko.observableArray([]);
-            self.loaded = ko.observable(false);
-            self.idx = ko.observable(0);
-            self.answers = ko.observableArray([]);
-            self.currentAnswer = ko.observable("");
-            self.backButtonEnabled = ko.observable(false);
-            self.nextButtonEnabled = ko.observable(true);
-
-            self.currentTitle = ko.computed(function () {
-                var currentQuestion = self.questions()[self.idx()];
-                var questionText = currentQuestion !== undefined ? currentQuestion.questionText : "";
-
-                return questionText;
-            });
-
-            self.currentQuestionNumber = ko.computed(function() {
-                return self.idx() + 1;
-            });
-
-            self.maxQuestions = ko.computed(function() {
-                return self.questions().length;
-            });
-
-            self.recordAnswer = function(chosenChoice) {
-                self.answers().push(chosenChoice);
-            };
-
-            self.backButtonEnabledStatus = ko.computed(function() {
-                return self.currentQuestionNumber() > 1 ? true : false;
-            });
-
-            self.nextButtonEnabledStatus = ko.computed(function() {
-                return self.currentQuestionNumber() < self.maxQuestions() ? true : false; 
-            });
-
-            self.goToNextQuestion = function() {
-                var ind = self.idx() + 1;
-                self.idx(ind);
-            };
-
-            self.goToPreviousQuestion = function() {
-                var ind = self.idx() - 1;
-                self.idx(ind);
-            };
-
-            return {
-                loaded: loaded,
-                quizTitle: self.quizTitle,
-                questions: self.questions,
-                currentTitle: currentTitle,
-                currentQuestionNumber: currentQuestionNumber,
-                answers: answers,
-                currentAnswer: currentAnswer,
-                backButtonEnabledStatus: backButtonEnabledStatus,
-                nextButtonEnabledStatus: nextButtonEnabledStatus,
-                goToPreviousQuestion: goToPreviousQuestion,
-                goToNextQuestion: goToNextQuestion
-            }
-        })();
-
-        ajh.quizLoader.createQuiz("http://localhost/ko-quiz/data/mario-data.json", function(quiz) {
-            viewModel.quizTitle(quiz.title);
-            viewModel.questions(quiz.questions);
-            viewModel.loaded(true);
-
-            ko.applyBindings(viewModel);
-        });
-    </script>
+    <script src="js/ko-quiz.js"></script>
 </body>
 </html>
