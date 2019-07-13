@@ -53,3 +53,26 @@ ko.bindingHandlers.answerQuestion = {
         });
     }
 };
+
+ko.bindingHandlers.markQuestion = {
+    init: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
+        
+        $(el).on("click", function() {
+            var currentAnswer = ko.unwrap(valueAccessor());
+            var correctAnswer = viewModel.getCorrectAnswer();
+            var answeredCorrectly = currentAnswer == correctAnswer;
+            var msgEl = answeredCorrectly ? $("#correct-message") : $("#wrong-message");
+
+            var afterAnimate = function() {
+                setTimeout(function() {
+                    msgEl.hide();
+                    viewModel.goToNextQuestion();
+                }, 1000);
+            };
+
+            msgEl.css({ opacity: "0.0" });
+            msgEl.show();
+            msgEl.animate({ opacity: "1.0" }, 750, "swing", afterAnimate);
+        });
+    }
+};

@@ -30,7 +30,7 @@
             <h2 data-bind="text: quizTitle"></h2>
         </div>
 
-        <div class="panel panel-primary">
+        <div class="panel panel-primary" id="question-container">
             <div class="panel-heading">
                 <span class="question-number" data-bind="text: currentQuestionNumber()"></span>.&nbsp;
                 <span data-bind="text: currentTitle()"></span>
@@ -44,9 +44,18 @@
             </div>
         </div>
 
+        <div class="row center" style="height: 65px;">
+            <div class="alert alert-success" id="correct-message" style="display: none;">
+                Correct!
+            </div>
+
+            <div class="alert alert-danger" id="wrong-message" style="display: none;">
+                Wrong!
+            </div>
+        </div>
         <div class="row center">
             <button type="button" class="btn btn-lg btn-primary" data-bind="enable: backButtonEnabledStatus, click: goToPreviousQuestion"><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</button>
-            <button type="button" class="btn btn-lg btn-primary" data-bind="enable: nextButtonEnabledStatus, click: goToNextQuestion">Next&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+            <button type="button" class="btn btn-lg btn-primary" data-bind="enable: nextButtonEnabledStatus, markQuestion: currentAnswer">Next&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
             <button type="button" class="btn btn-lg btn-success" data-bind="enable: finishButtonEnabledStatus, click: completeQuiz">Finish&nbsp;</button>
         </div>
         <div class="row">

@@ -30,12 +30,17 @@ var viewModel = (function() {
     self.currentAnswer.subscribe(function(answer) {       
         var idx = self.idx();
         var currentAnswer = self.answers()[idx];
+        var correctAnswer = getCorrectAnswer();
+        var answeredCorrectly = answer == correctAnswer;
 
+        /*
         if (currentAnswer === undefined) {
-            self.answers().push({ index: idx, answer: answer });
+            self.answers().push({ index: idx, answer: answer, answeredCorrectly: answeredCorrectly });
         } else {
-            self.answers()[idx] = { index: idx, answer: answer };
-        }
+            self.answers()[idx] = { index: idx, answer: answer, answeredCorrectly: answeredCorrectly };
+        }*/
+
+        self.answers().push({ index: idx, answer: answer, answeredCorrectly: answeredCorrectly });
 
         self.hasAnswered(true);
 
@@ -60,15 +65,16 @@ var viewModel = (function() {
     });
 
     self.goToNextQuestion = function() {
+        self.hasAnswered(hasAnsweredCurrentQuestion());
+
         var ind = self.idx() + 1;
         self.idx(ind);
-        self.hasAnswered(hasAnsweredCurrentQuestion());
     };
 
     self.goToPreviousQuestion = function() {
+        self.hasAnswered(hasAnsweredCurrentQuestion());
         var ind = self.idx() - 1;
         self.idx(ind);
-        self.hasAnswered(hasAnsweredCurrentQuestion());
     };
 
     self.hasAnsweredIndicator = function(c) {
@@ -83,7 +89,19 @@ var viewModel = (function() {
     };
 
     self.completeQuiz = function() {
-        alert("quiz is complete");
+        
+        var correctCount = 0;
+        
+        for (var i = 0; i < self.answers().length; i++) {
+
+            var currentAnswer = self.answers()[i];
+            
+            if (currentAnswer.answeredCorrectly) {
+                correctCount++;
+            }
+        }
+
+        console.log("You answered " + correctCount + " questions correctly");
     };
 
     function hasAnsweredCurrentQuestion() {
@@ -92,6 +110,21 @@ var viewModel = (function() {
 
         return q !== undefined;
     }
+
+    self.getCorrectAnswer = function() {
+        var idx = self.idx();
+        var choices = self.questions()[idx].choices;
+        var correctChoice = null;
+
+        for (var i = 0; i < choices.length; i++) {
+            if (choices[i].isCorrect) {
+                correctChoice = choices[i];
+                break;
+            }
+        }
+        
+        return correctChoice.choice;
+    }; 
 
     return {
         loaded: loaded,
@@ -107,7 +140,8 @@ var viewModel = (function() {
         goToNextQuestion: goToNextQuestion,
         hasAnswered: hasAnswered,
         finishButtonEnabledStatus: finishButtonEnabledStatus,
-        completeQuiz: completeQuiz
+        completeQuiz: completeQuiz,
+        getCorrectAnswer: getCorrectAnswer
     }
 })();
 

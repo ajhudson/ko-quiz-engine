@@ -10,12 +10,13 @@ ajh.quizLoader = (function() {
         this.id = id;
         this.questionText = questionText;
         this.choices = choices;
-        this.answer = answer;   
+        this.answer = answer; 
     }
 
-    var Choice = function(choice, choiceText) {
+    var Choice = function(choice, choiceText, isCorrect) {
         this.choice = choice;
         this.choiceText = choiceText;
+        this.isCorrect = isCorrect;
     };
 
     var Answer = function(index) {
@@ -34,7 +35,7 @@ ajh.quizLoader = (function() {
 
                 for (c in currentChoices) {
                     var currentChoice = currentChoices[c];
-                    choicesToStore.push(new Choice(currentChoice.choice, currentChoice.choicetext));
+                    choicesToStore.push(new Choice(currentChoice.choice, currentChoice.choicetext, currentChoice.correct));
                 }
 
                 quizQuestions.push(new Question(currentQuestion.questionid, currentQuestion.questiontext, choicesToStore, answerToStore));
