@@ -30,9 +30,9 @@
             <h2 data-bind="text: quizTitle"></h2>
         </div>
 
-        <div class="panel panel-primary" id="question-container">
+        <div class="panel panel-primary" id="question-container" data-bind="visible: showQuestionContainer">
             <div class="panel-heading">
-                <span class="question-number" data-bind="text: currentQuestionNumber()"></span>.&nbsp;
+                Question <span class="question-number" data-bind="text: currentQuestionNumber()"></span> of <span class="question-number" data-bind="text: maxQuestions"></span>.&nbsp;
                 <span data-bind="text: currentTitle()"></span>
             </div>
             <div class="panel-body">
@@ -53,14 +53,21 @@
                 Wrong!
             </div>
         </div>
-        <div class="row center">
+        <div class="row center" data-bind="visible: showQuestionContainer">
             <button type="button" class="btn btn-lg btn-primary" data-bind="enable: backButtonEnabledStatus, click: goToPreviousQuestion"><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</button>
             <button type="button" class="btn btn-lg btn-primary" data-bind="enable: nextButtonEnabledStatus, markQuestion: currentAnswer">Next&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
             <button type="button" class="btn btn-lg btn-success" data-bind="enable: finishButtonEnabledStatus, click: completeQuiz">Finish&nbsp;</button>
         </div>
-        <div class="row">
-            <div id="currentAnswer" data-bind="text: currentAnswer"></div>
-            <div data-bind="text: hasAnswered"></div>
+        
+        <div class="panel panel-primary" id="end-of-quiz-container" data-bind="visible: quizComplete">
+            <div class="panel-heading">
+                <p>The quiz has finished</p>
+            </div>
+            <div class="panel-body">
+                <p data-bind="visible: allQuestionsWrong" class="text-danger">Sorry but you didn't get a single answer.</p>
+                <p data-bind="visible: allQuestionsCorrect" class="text-success">Congratulations, full marks!</p>
+                <p data-bind="visible: mixedResults" class="text-primary">You got <span data-bind="text: numberOfCorrectAnswers"></span> out of <span data-bind="text: maxQuestions"></span> questions correct.</p>
+            </div>
         </div>
     </div>
 

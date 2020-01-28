@@ -11,6 +11,13 @@ var viewModel = (function() {
     self.nextButtonEnabled = ko.observable(true);
     self.hasAnswered = ko.observable(false);
     self.allQuestionsAnswered = ko.observable(false);
+    self.isLastQuestion = ko.observable(false);
+    self.showQuestionContainer = ko.observable(true);
+    self.allQuestionsWrong = ko.observable(false);
+    self.allQuestionsCorrect = ko.observable(false);
+    self.numberOfCorrectAnswers = ko.observable(0);
+    self.mixedResults = ko.observable(false);
+    self.quizComplete = ko.observable(false);
 
     self.currentTitle = ko.computed(function () {
         var currentQuestion = self.questions()[self.idx()];
@@ -33,15 +40,7 @@ var viewModel = (function() {
         var correctAnswer = getCorrectAnswer();
         var answeredCorrectly = answer == correctAnswer;
 
-        /*
-        if (currentAnswer === undefined) {
-            self.answers().push({ index: idx, answer: answer, answeredCorrectly: answeredCorrectly });
-        } else {
-            self.answers()[idx] = { index: idx, answer: answer, answeredCorrectly: answeredCorrectly };
-        }*/
-
         self.answers().push({ index: idx, answer: answer, answeredCorrectly: answeredCorrectly });
-
         self.hasAnswered(true);
 
         var isLastQuestion = self.currentQuestionNumber() === self.questions().length;
@@ -57,18 +56,23 @@ var viewModel = (function() {
     });
 
     self.nextButtonEnabledStatus = ko.computed(function() {
-        return self.currentQuestionNumber() < self.maxQuestions() && self.hasAnswered() ? true : false; 
+        //return self.currentQuestionNumber() <= self.maxQuestions() && self.hasAnswered() ? true : false; 
+        return self.currentQuestionNumber() <= self.maxQuestions() ? true : false; 
     });
 
     self.finishButtonEnabledStatus = ko.computed(function() {
-        return this.allQuestionsAnswered();
+        return self.isLastQuestion();
     });
 
     self.goToNextQuestion = function() {
         self.hasAnswered(hasAnsweredCurrentQuestion());
 
-        var ind = self.idx() + 1;
-        self.idx(ind);
+        if (isLastQuestion()) {
+            completeQuiz();
+        } else {
+            var ind = self.idx() + 1;
+            self.idx(ind);
+        }
     };
 
     self.goToPreviousQuestion = function() {
@@ -91,6 +95,7 @@ var viewModel = (function() {
     self.completeQuiz = function() {
         
         var correctCount = 0;
+        var wrongCount = 0;
         
         for (var i = 0; i < self.answers().length; i++) {
 
@@ -98,10 +103,21 @@ var viewModel = (function() {
             
             if (currentAnswer.answeredCorrectly) {
                 correctCount++;
+            } else {
+                wrongCount++;
             }
         }
 
-        console.log("You answered " + correctCount + " questions correctly");
+        self.numberOfCorrectAnswers(correctCount);
+        self.allQuestionsCorrect(correctCount == self.answers().length);
+        self.allQuestionsWrong(wrongCount == self.answers().length);
+
+        if (!self.allQuestionsCorrect() && !self.allQuestionsWrong()) {
+            self.mixedResults(true);
+        }
+
+        self.showQuestionContainer(false);
+        self.quizComplete(true);
     };
 
     function hasAnsweredCurrentQuestion() {
@@ -109,6 +125,10 @@ var viewModel = (function() {
         var q = self.answers()[idx];
 
         return q !== undefined;
+    }
+
+    function isLastQuestion() {
+        return self.idx() === self.questions().length - 1;
     }
 
     self.getCorrectAnswer = function() {
@@ -141,7 +161,13 @@ var viewModel = (function() {
         hasAnswered: hasAnswered,
         finishButtonEnabledStatus: finishButtonEnabledStatus,
         completeQuiz: completeQuiz,
-        getCorrectAnswer: getCorrectAnswer
+        getCorrectAnswer: getCorrectAnswer,
+        showQuestionContainer: showQuestionContainer,
+        allQuestionsWrong: allQuestionsWrong,
+        allQuestionsCorrect: allQuestionsCorrect,
+        numberOfCorrectAnswers: numberOfCorrectAnswers,
+        mixedResults: mixedResults,
+        quizComplete: quizComplete
     }
 })();
 
